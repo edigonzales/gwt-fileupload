@@ -1,0 +1,158 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #FFFFFF; 
+    /*
+    font-smooth: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    */
+}
+
+body, div {
+    font-family: Frutiger, 'Fira Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;   
+}
+
+#map {
+    height: 100%;
+}
+
+.field-group input, .field-group textarea {
+    font-family: Frutiger, 'Fira Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;   
+    font-size: 16px;   
+    font-weight: 300;     
+}
+
+.field-group .field-label {
+    font-size: 12px;
+    font-weight: 300;   
+}
+
+.dropdown-menu>li>a {
+    font-weight: 300;
+} 
+
+#container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1400px;
+    max-width: 95%;
+    background-color: #FFFFFF;        
+}
+
+.logo {
+    margin-top: 10px;
+    font-size: 40px;
+    text-align: right;
+}
+
+.breadcrumb {
+    padding: 0px !important;    
+}
+
+.sodata-title {
+    margin-top: 120px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.info {
+    margin-top: 30px;
+    font-size: 16px;
+    font-style: normal;
+}
+
+.default-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #c62828; 
+}
+
+a.default-link:hover {
+    color: #c62828;
+    text-decoration: underline !important;
+}  
+
+a.default-link:visited {
+    color: #c62828; 
+    text-decoration: underline !important;
+}  
+
+#search-panel {
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.bg-l-4-grey {
+    color: #999999 !important;
+    font-weight: 300 !important;
+}
+
+.bg-l-3-grey {
+    color: #666666 !important;
+    font-weight: 300 !important;
+}
+
+.bg-l-2-grey {
+    color: #333333 !important;
+    font-weight: 300 !important;
+}
+
+a.badge-link {
+    color: #333333;  
+    text-decoration: none !important;       
+}
+
+a.badge-link:hover {
+    color: #333333; 
+    text-decoration: none !important;                
+}
+
+a.badge-link:visited {
+    color: #333333;  
+    text-decoration: none !important;              
+}
+
+#dataset-table {
+    font-size: 16px;
+}
+
+.modal-object {
+	max-height: calc(100% - 120px);
+	overflow-y: auto; 
+}
+
+.model-header {
+    font-size: 16px !important;
+    color: #333333 !important;  
+}
+
+.modal .modal-content .modal-body {
+    font-size: 16px !important;
+    color: #333333 !important;
+}
+
+.modal-body-paragraph {
+    padding-bottom: 16px;
+}
+
+h4, .h4 {
+    font-size: 16px !important;
+}
+
+.modal-paragraph {
+    padding-bottom: 20px;
+}
+
+.modal-meta-details {
+	padding-bottom: 5px;
+}
+
+.modal-meta-summary {
+	display: list-item; /* firefox only */
+}
+
+.modal-meta-paragraph {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
