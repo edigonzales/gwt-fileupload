@@ -15,7 +15,8 @@ server:
 logging:
   level:
     org.springframework: ${LOG_LEVEL:INFO} 
-
+    ch.so.agi: ${LOG_LEVEL_APP:DEBUG} 
+    
 spring:
   web:
     resources:
@@ -38,6 +39,7 @@ management:
 #     profiles:
 #         active: test 
 
+
 # ========================
 # APPLICATION
 # ========================   
@@ -47,3 +49,5 @@ lucene:
 
 app:
     myVar: ${VAR:defaultValue}
+    workDirectory: ${WORK_DIRECTORY:/tmp/}
+    folderPrefix: ${FOLDER_PREFIX:ilivalidatorws_}
