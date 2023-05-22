@@ -90,7 +90,8 @@ public class App implements EntryPoint {
     private NumberFormat fmtDefault = NumberFormat.getDecimalFormat();
     private NumberFormat fmtPercent = NumberFormat.getFormat("#0.0");
 
-    private static final String API_PATH_UPLOAD = "rest/jobs";
+//    private static final String API_PATH_UPLOAD = "rest/jobs";
+    private static final String API_PATH_UPLOAD = "rest/mjobs";
     private static final String HEADER_OPERATION_LOCATION = "Operation-Location";
     
     private Timer apiTimer;
@@ -119,7 +120,10 @@ public class App implements EntryPoint {
         
         HTMLInputElement input = (HTMLInputElement) document.createElement("input");
         input.setAttribute("type", "file");
-        input.setAttribute("name", "file");
+//        input.setAttribute("name", "file");
+        input.setAttribute("name", "files");
+        input.multiple = true;
+        input.accept = ".itf,.xtf,.xml";
         form.appendChild(input);
 
         HTMLButtonElement button = (HTMLButtonElement) document.createElement("button");
@@ -140,8 +144,13 @@ public class App implements EntryPoint {
 //                    
 //                }
                  
-                File file = input.files.getAt(0);
-                formData.append("file", AppendValueUnionType.of(file), file.name);
+                //File file = input.files.getAt(0);
+                for (int i=0; i<input.files.length; i++) {
+                    File file = input.files.getAt(i);
+                    formData.append("files", AppendValueUnionType.of(file), file.name);
+                }
+                
+                //formData.append("file", AppendValueUnionType.of(file), file.name);
 
                 
                 RequestInit init = RequestInit.create();

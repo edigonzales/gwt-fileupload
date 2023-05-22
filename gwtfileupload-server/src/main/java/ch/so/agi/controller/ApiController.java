@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.so.agi.service.FilesystemStorageService;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -48,6 +49,33 @@ public class ApiController {
                 .header("Operation-Location", getHost()+"/rest/jobs/"+jobId)
                 .body(null);        
     }
+    
+    
+    @PostMapping(value="/rest/mjobs", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> uploadFiles(@RequestParam(name="files", required=true) @RequestBody MultipartFile[] files) {
+        log.debug("number of files: {}", files.length);
+        
+        for (MultipartFile file : files) {
+            log.debug(file.getOriginalFilename());
+        }
+//        Path uploadedFile = fileStorageService.store(file);        
+//        log.debug(uploadedFile.toAbsolutePath().toString());
+//        
+//        String inputFileName = uploadedFile.toAbsolutePath().toString();
+        //String logFileName = Utils.getLogFileName(inputFileName);
+        
+//        JobId jobId = jobScheduler.enqueue(() -> ilivalidatorService.validate(inputFileName, logFileName, allObjectsAccessible, configFile));
+//        log.debug(jobId.toString());
+
+        UUID uuid = UUID.randomUUID();
+        String jobId = uuid.toString();
+        
+        return ResponseEntity
+                .accepted()
+                .header("Operation-Location", getHost()+"/rest/jobs/"+jobId)
+                .body(null);        
+    }
+    
     
     @GetMapping("/rest/jobs/{jobId}")
     public ResponseEntity<?> getJobById(@PathVariable String jobId) {
