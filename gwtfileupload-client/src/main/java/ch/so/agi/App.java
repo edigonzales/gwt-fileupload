@@ -56,6 +56,7 @@ import elemental2.dom.HTMLFormElement;
 import elemental2.dom.HTMLInputElement;
 import elemental2.dom.Location;
 import elemental2.dom.RequestInit;
+import elemental2.dom.XMLHttpRequest;
 import ol.AtPixelOptions;
 import ol.Extent;
 import ol.Map;
@@ -89,7 +90,7 @@ public class App implements EntryPoint {
     private NumberFormat fmtDefault = NumberFormat.getDecimalFormat();
     private NumberFormat fmtPercent = NumberFormat.getFormat("#0.0");
 
-    private static final String API_PATH_UPLOAD = "api/jobs";
+    private static final String API_PATH_UPLOAD = "rest/jobs";
     private static final String HEADER_OPERATION_LOCATION = "Operation-Location";
     
     private Timer apiTimer;
@@ -99,30 +100,18 @@ public class App implements EntryPoint {
         init();
     }
     
-    public void init() {
-        /*
-        // Registering EPSG:2056 / LV95 reference frame.
-        Proj4.defs(EPSG_2056, "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=2600000 +y_0=1200000 +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs");
-        ol.proj.Proj4.register(Proj4.get());
-
-        ProjectionOptions projectionOptions = OLFactory.createOptions();
-        projectionOptions.setCode(EPSG_2056);
-        projectionOptions.setUnits("m");
-        projectionOptions.setExtent(new Extent(2420000, 1030000, 2900000, 1350000));
-        projection = new Projection(projectionOptions);
-        Projection.addProjection(projection);
-        */
-        
+    public void init() {        
         // Change Domino UI color scheme.
         Theme theme = new Theme(ColorScheme.RED);
         theme.apply();
         
         console.log("Hallo Stefan.");
-        
+                
         HTMLDocument document = DomGlobal.document;
+        
+        HTMLDivElement protocolContainer = div().id("protocolContainer").element();
+        
         HTMLFormElement form = (HTMLFormElement) document.createElement("form");
-        //form.action = "rest/jobs";
-        //form.method = "post";
         form.enctype = "multipart/form-data";
         form.action = "";
         
@@ -145,6 +134,12 @@ public class App implements EntryPoint {
                 FormData formData = new FormData();
                 
                 //console.log(input.files[0]);
+                // TODO
+                // testen, ob file vorhanden.
+//                if () {
+//                    
+//                }
+                 
                 File file = input.files.getAt(0);
                 formData.append("file", AppendValueUnionType.of(file), file.name);
 
@@ -171,6 +166,34 @@ public class App implements EntryPoint {
                         public void run() {
                             // showElapsed();
                             console.log("fubar: " + jobUrl);
+                            
+                            XMLHttpRequest httpRequest = new XMLHttpRequest();
+                            httpRequest.open("GET", jobUrl, false);
+                            httpRequest.onload = event -> {
+                                if (httpRequest.status == 200) {
+                                    console.log(httpRequest.responseText);
+                                    if (httpRequest.responseText.equalsIgnoreCase("SUCCEEDED")) {
+                                        console.log("cancel timer");
+                                        apiTimer.cancel();
+                                        
+                                        protocolContainer.innerHTML = "downloade mich";
+                                    }
+                                    
+                                    
+                                
+                                } else {
+                                    console.log("status code: " + httpRequest.status);
+                                    DomGlobal.window.alert("Error fetching: " + jobUrl);
+                                }
+                            };
+                            
+                            httpRequest.addEventListener("error", event -> {
+                                console.log("status text: " + httpRequest.statusText);
+                                DomGlobal.window
+                                        .alert("Error fetching: " + jobUrl + "\n Error: " + httpRequest.status + " " + httpRequest.statusText);
+                            });
+                            
+                            httpRequest.send();
                         }
                     };
                     
@@ -194,6 +217,7 @@ public class App implements EntryPoint {
             }
         });
         
+        body().add(protocolContainer);
 
 //        body().add(div().id(MAP_DIV_ID));
 //        map = MapPresets.getBlakeAndWhiteMap(MAP_DIV_ID);
