@@ -37,6 +37,7 @@ import org.gwtproject.safehtml.shared.SafeHtmlUtils;
 import com.github.nmorel.gwtjackson.client.ObjectMapper;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
@@ -88,13 +89,11 @@ public class App implements EntryPoint {
     private NumberFormat fmtDefault = NumberFormat.getDecimalFormat();
     private NumberFormat fmtPercent = NumberFormat.getFormat("#0.0");
 
-    // Projection
-    //private static final String EPSG_2056 = "EPSG:2056";
-    //private static final String EPSG_4326 = "EPSG:4326"; 
-    //private Projection projection;
-
-    private String MAP_DIV_ID = "map";
-    private Map map;
+    private static final String API_PATH_UPLOAD = "api/jobs";
+    private static final String HEADER_OPERATION_LOCATION = "Operation-Location";
+    
+    private Timer apiTimer;
+    private static final int API_REQUEST_PERIOD_MILLIS = 2000;
 
     public void onModuleLoad() {
         init();
@@ -156,15 +155,29 @@ public class App implements EntryPoint {
                 
                 console.log("form submit...");
                 
-                DomGlobal.fetch("rest/jobs", init)
+                DomGlobal.fetch(API_PATH_UPLOAD, init)
                 .then(response -> {
                     if (!response.ok) {
                         return null;
                     }
-                    String jobUrl = response.headers.get("Operation-Location");
+                    String jobUrl = response.headers.get(HEADER_OPERATION_LOCATION);
                     console.log(jobUrl);
                     
-                    return response.json();
+                    if (apiTimer != null) {
+                        apiTimer.cancel();
+                    }
+                    
+                    apiTimer = new Timer() {
+                        public void run() {
+                            // showElapsed();
+                            console.log("fubar: " + jobUrl);
+                        }
+                    };
+                    
+                    apiTimer.scheduleRepeating(API_REQUEST_PERIOD_MILLIS);
+                    
+                    //return response.json();
+                    return null;
                 })
 //                .then(json -> {
 //                    console.log(json);
