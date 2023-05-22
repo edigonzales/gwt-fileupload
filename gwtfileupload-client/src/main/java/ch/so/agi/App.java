@@ -44,6 +44,9 @@ import elemental2.dom.CSSProperties;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.dom.EventListener;
+import elemental2.dom.File;
+import elemental2.dom.FormData;
+import elemental2.dom.FormData.AppendValueUnionType;
 import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLDocument;
@@ -51,6 +54,7 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLFormElement;
 import elemental2.dom.HTMLInputElement;
 import elemental2.dom.Location;
+import elemental2.dom.RequestInit;
 import ol.AtPixelOptions;
 import ol.Extent;
 import ol.Map;
@@ -118,19 +122,64 @@ public class App implements EntryPoint {
         
         HTMLDocument document = DomGlobal.document;
         HTMLFormElement form = (HTMLFormElement) document.createElement("form");
-        form.method = "post";
+        //form.action = "rest/jobs";
+        //form.method = "post";
         form.enctype = "multipart/form-data";
-//        form.action = "";
+        form.action = "";
         
         body().add(form);
         
         HTMLInputElement input = (HTMLInputElement) document.createElement("input");
         input.setAttribute("type", "file");
+        input.setAttribute("name", "file");
         form.appendChild(input);
 
         HTMLButtonElement button = (HTMLButtonElement) document.createElement("button");
         button.textContent = "Submit";
         form.appendChild(button);
+        
+        form.addEventListener("submit", new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                evt.preventDefault();
+                
+                FormData formData = new FormData();
+                
+                //console.log(input.files[0]);
+                File file = input.files.getAt(0);
+                formData.append("file", AppendValueUnionType.of(file), file.name);
+
+                
+                RequestInit init = RequestInit.create();
+                init.setMethod("POST");
+                init.setBody(formData);
+                
+                console.log("form submit...");
+                
+                DomGlobal.fetch("rest/jobs", init)
+                .then(response -> {
+                    if (!response.ok) {
+                        return null;
+                    }
+                    String jobUrl = response.headers.get("Operation-Location");
+                    console.log(jobUrl);
+                    
+                    return response.json();
+                })
+//                .then(json -> {
+//                    console.log(json);
+//                    
+//                    return null;
+//                })
+                .catch_(error -> {
+                    console.log(error);
+                    return null;
+                });
+                
+                form.reset();
+                
+            }
+        });
         
 
 //        body().add(div().id(MAP_DIV_ID));
